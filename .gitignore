@@ -1,3 +1,16 @@
+#eclipse files
+.classpath
+.project
+
+bin/
+
+# HSQL DB Files
+CookbookDB.lck
+CookbookDB.log
+CookbookDB.properties
+CookbookDB.script
+CookbookDB/
+
 *.class
 
 # Package Files #

@@ -1,0 +1,46 @@
+
+/* IMAGE */
+
+CREATE SEQUENCE image_db_id START WITH 1 MINVALUE 1 MAXVALUE 999999999;
+
+CREATE TABLE image (image_db_id INTEGER NOT NULL, name VARCHAR(256), image BLOB, type VARCHAR(10));
+
+
+/* UNIT */
+CREATE SEQUENCE unit_db_id START WITH 1 MINVALUE 1 MAXVALUE 999999999;
+
+CREATE TABLE unit ( unit_db_id INTEGER NOT NULL, name VARCHAR(256), abbreviation VARCHAR(5));
+
+/* COOK BOOK */
+CREATE SEQUENCE cookbook_db_id START WITH 1 MINVALUE 1 MAXVALUE 999999999;
+
+CREATE TABLE cookbook (cookbook_db_id INTEGER NOT NULL, name VARCHAR(256) NOT NULL, image_db_id INTEGER);
+
+
+
+
+/* INGREDIENT */
+CREATE SEQUENCE ingredient_db_id START WITH 1 MINVALUE 1 MAXVALUE 999999999;
+
+CREATE TABLE ingredient (ingredient_db_id INTEGER NOT NULL, name VARCHAR(256) NOT NULL, image_db_id INTEGER);
+
+/* COOKBOOK's INGREDIENT */
+CREATE TABLE cookbook_ingredient (cookbook_db_id INTEGER NOT NULL, ingredient_db_id INTEGER NOT NULL, quantity INTEGER NOT NULL, unit_db_id INTEGER NOT NULL);
+
+commit;
+
+
+ALTER TABLE image ADD CONSTRAINT PK_IMAGE PRIMARY KEY (image_db_id);
+
+ALTER TABLE unit ADD CONSTRAINT PK_UNIT PRIMARY KEY (unit_db_id);
+
+ALTER TABLE cookbook ADD CONSTRAINT PK_COOKBOOK PRIMARY KEY (cookbook_db_id);
+
+ALTER TABLE cookbook ADD CONSTRAINT FK_IMAGE_COOKBOOK FOREIGN KEY (image_db_id) REFERENCES image(image_db_id);
+
+ALTER TABLE ingredient ADD CONSTRAINT PK_INGREDIENT PRIMARY KEY (ingredient_db_id);
+ALTER TABLE ingredient ADD CONSTRAINT FK_IMAGE_INGREDIENT FOREIGN KEY (image_db_id) REFERENCES image(image_db_id);
+
+ALTER TABLE cookbook_ingredient ADD CONSTRAINT PK_COOKBOOK_INGREDIENT PRIMARY KEY (cookbook_db_id, ingredient_db_id);
+
+commit;
