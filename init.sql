@@ -1,3 +1,4 @@
+-- Init
 
 /* IMAGE */
 
@@ -47,3 +48,4 @@ ALTER TABLE ingredient ADD CONSTRAINT FK_RECIPE_INGREDIENT FOREIGN KEY (recipe_d
 ALTER TABLE ingredient ADD CONSTRAINT FK_UNIT_INGREDIENT FOREIGN KEY (unit_db_id) REFERENCES unit(unit_db_id);
 ALTER TABLE recipe ADD CONSTRAINT FK_RECIPE_COOKBOOK FOREIGN KEY (cookbook_db_id) REFERENCES cookbook(cookbook_db_id);
 ALTER TABLE recipe_step ADD CONSTRAINT FK_RECIPE_RECIPE_STEP FOREIGN KEY (recipe_db_id) REFERENCES recipe(recipe_db_id);
+

@@ -20,8 +20,4 @@ INSERT INTO  ingredient (ingredient_db_id, name, image_db_id) VALUES (NEXT VALUE
 
 INSERT INTO cookbook (cookbook_db_id, name, image_db_id) VALUES (NEXT VALUE FOR cookbook_db_id, 'Gateau', null);
 
-INSERT INTO cookbook_ingredient(cookbook_db_id, ingredient_db_id, quantity, unit_db_id) VALUES ((select cookbook_db_id from cookbook where name = 'Gateau'), (select ingredient_db_id from ingredient where name = 'FARINE'), '500', (select unit_db_id from unit where abbreviation = 'g'));
-
-INSERT INTO cookbook_ingredient(cookbook_db_id, ingredient_db_id, quantity, unit_db_id) VALUES ((select cookbook_db_id from cookbook where name = 'Gateau'), (select ingredient_db_id from ingredient where name = 'OEUF'), '4', (select unit_db_id from unit where abbreviation = ''));
-
 commit;

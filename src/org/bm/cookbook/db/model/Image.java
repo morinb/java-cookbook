@@ -3,28 +3,32 @@ package org.bm.cookbook.db.model;
 import java.io.Serializable;
 import javax.persistence.*;
 import java.util.Date;
-import java.util.List;
 
 
 /**
- * The persistent class for the COOKBOOK database table.
+ * The persistent class for the IMAGE database table.
  * 
  */
 @Entity
-public class Cookbook implements Serializable {
+public class Image implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name="COOKBOOK_OID_GENERATOR", sequenceName="COOKBOOK_DB_ID")
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="COOKBOOK_OID_GENERATOR")
-	@Column(name="COOKBOOK_DB_ID")
+	@SequenceGenerator(name="IMAGE_OID_GENERATOR", sequenceName="IMAGE_DB_ID")
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="IMAGE_OID_GENERATOR")
+	@Column(name="IMAGE_DB_ID")
 	private int oid;
 
 	@Temporal(TemporalType.DATE)
 	@Column(name="CREATION_DATE", updatable=false)
 	private Date creationDate;
 
+	@Column(name="IMAGE_PATH")
+	private String imagePath;
+
 	private String name;
+
+	private String type;
 
 	@Temporal(TemporalType.DATE)
 	@Column(name="UPDATING_DATE")
@@ -33,16 +37,7 @@ public class Cookbook implements Serializable {
 	@Version
 	private int version;
 
-	//uni-directional many-to-one association to Image
-	@ManyToOne
-	@JoinColumn(name="IMAGE_DB_ID")
-	private Image image;
-
-	//bi-directional many-to-one association to Recipe
-	@OneToMany(mappedBy="cookbook")
-	private List<Recipe> recipes;
-
-	public Cookbook() {
+	public Image() {
 		creationDate = new Date();
 		version = 1;
 	}
@@ -63,12 +58,28 @@ public class Cookbook implements Serializable {
 		this.creationDate = creationDate;
 	}
 
+	public String getImagePath() {
+		return this.imagePath;
+	}
+
+	public void setImagePath(String imagePath) {
+		this.imagePath = imagePath;
+	}
+
 	public String getName() {
 		return this.name;
 	}
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getType() {
+		return this.type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
 	}
 
 	public Date getUpdatingDate() {
@@ -85,22 +96,6 @@ public class Cookbook implements Serializable {
 
 	public void setVersion(int version) {
 		this.version = version;
-	}
-
-	public Image getImage() {
-		return this.image;
-	}
-
-	public void setImage(Image image) {
-		this.image = image;
-	}
-
-	public List<Recipe> getRecipes() {
-		return this.recipes;
-	}
-
-	public void setRecipes(List<Recipe> recipes) {
-		this.recipes = recipes;
 	}
 
 }

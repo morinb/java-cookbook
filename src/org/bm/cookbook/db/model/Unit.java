@@ -1,132 +1,106 @@
 package org.bm.cookbook.db.model;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.Collection;
+import java.io.Serializable;
+import java.util.Date;
 
-import org.bm.cookbook.db.DB;
-import org.bm.cookbook.db.DBFactory;
-import org.bm.cookbook.db.DBObject;
-import org.bm.cookbook.db.IOID;
-import org.bm.cookbook.db.impl.OID;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.Version;
 
-public class Unit extends DBObject {
+import org.hibernate.annotations.NamedQueries;
+import org.hibernate.annotations.NamedQuery;
+
+/**
+ * The persistent class for the UNIT database table.
+ * 
+ */
+@Entity
+@NamedQueries(value = { @NamedQuery(name = "findUnitByOID", query = "from Unit u where u.oid=:oid"),
+		@NamedQuery(name = "findUnitByName", query = "from Unit u where u.name=:name"),
+		@NamedQuery(name = "findAllUnit", query = "from Unit u"),
+
+})
+public class Unit implements Serializable {
+	private static final long serialVersionUID = 1L;
+
+	@Id
+	@SequenceGenerator(name = "UNIT_OID_GENERATOR", sequenceName = "UNIT_DB_ID")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "UNIT_OID_GENERATOR")
+	@Column(name = "UNIT_DB_ID")
+	private int oid;
+
 	private String abbreviation;
+
+	@Temporal(TemporalType.DATE)
+	@Column(name = "CREATION_DATE", updatable = false)
+	private Date creationDate;
+
 	private String name;
 
-	public Unit(IOID oid, String abbreviation, String name) {
-		super(oid);
-		this.abbreviation = abbreviation;
-		this.name = name;
+	@Temporal(TemporalType.DATE)
+	@Column(name = "UPDATING_DATE")
+	private Date updatingDate;
+
+	@Version
+	private int version;
+
+	public Unit() {
+		creationDate = new Date();
+		version = 1;
+	}
+
+	public int getOid() {
+		return this.oid;
+	}
+
+	public void setOid(int oid) {
+		this.oid = oid;
 	}
 
 	public String getAbbreviation() {
-		return abbreviation;
-	}
-
-	public String getName() {
-		return name;
+		return this.abbreviation;
 	}
 
 	public void setAbbreviation(String abbreviation) {
 		this.abbreviation = abbreviation;
 	}
 
+	public Date getCreationDate() {
+		return this.creationDate;
+	}
+
+	public void setCreationDate(Date creationDate) {
+		this.creationDate = creationDate;
+	}
+
+	public String getName() {
+		return this.name;
+	}
+
 	public void setName(String name) {
 		this.name = name;
 	}
 
-	public static Unit findByOID(IOID oid) throws SQLException {
-		DB db = DBFactory.get().getDB();
-
-		Connection c = db.getConnection();
-		PreparedStatement pStmt = c.prepareStatement("SELECT name, abbreviation FROM unit where unit_db_id = ?");
-		pStmt.setLong(1, oid.getOID());
-
-		ResultSet rs = pStmt.executeQuery();
-		Unit u = null;
-		if (rs.next()) {
-			String name = rs.getString("name");
-			String abbreviation = rs.getString("abbreviation");
-
-			u = new Unit(oid, abbreviation, name);
-		} else {
-			// no row returned
-		}
-
-		return u;
+	public Date getUpdatingDate() {
+		return this.updatingDate;
 	}
 
-	public static Collection<Unit> findAll() throws SQLException {
-		DB db = DBFactory.get().getDB();
-
-		Connection c = db.getConnection();
-
-		Statement stmt = c.createStatement();
-
-		ResultSet rs = stmt.executeQuery("SELECT unit_db_id, name, abbreviation FROM unit");
-
-		Collection<Unit> units = new ArrayList<Unit>();
-
-		while (rs.next()) {
-			IOID oid = new OID(rs.getLong("unit_db_id"));
-			String name = rs.getString("name");
-			String abbreviation = rs.getString("abbreviation");
-
-			Unit u = new Unit(oid, abbreviation, name);
-			units.add(u);
-		}
-
-		return units;
+	public void setUpdatingDate(Date updatingDate) {
+		this.updatingDate = updatingDate;
 	}
 
-	public static Unit findByName(String name) throws SQLException {
-		DB db = DBFactory.get().getDB();
-
-		Connection c = db.getConnection();
-		PreparedStatement pStmt = c
-				.prepareStatement("SELECT unit_db_id, abbreviation FROM unit where name = ?");
-		pStmt.setString(1, name);
-
-		ResultSet rs = pStmt.executeQuery();
-		Unit u = null;
-		if (rs.next()) {
-			IOID oid = new OID(rs.getLong("unit_db_id"));
-			String abbreviation = rs.getString("abbreviation");
-
-			u = new Unit(oid, abbreviation, name);
-		} else {
-			// no row returned
-		}
-
-		return u;
+	public int getVersion() {
+		return this.version;
 	}
 
-	public static boolean insert(Unit unit) throws SQLException {
-
-		DB db = DBFactory.get().getDB();
-		Connection c = db.getConnection();
-
-		PreparedStatement pStmt = c
-				.prepareStatement("INSERT INTO unit(unit_db_id, abbreviation, name) VALUE (unit_db_id.nextval, ?, ?)");
-		pStmt.setString(1, unit.getName());
-		pStmt.setString(2, unit.getAbbreviation());
-
-		boolean result = pStmt.execute();
-
-		pStmt.close();
-
-		return result;
-
-	}
-	
-	@Override
-	public String toString() {
-		return this.name + " ("+this.abbreviation+")";
+	public void setVersion(int version) {
+		this.version = version;
 	}
 
 }

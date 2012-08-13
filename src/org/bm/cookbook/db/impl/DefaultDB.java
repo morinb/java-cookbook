@@ -1,17 +1,13 @@
 package org.bm.cookbook.db.impl;
 
-import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
 import org.bm.cookbook.db.DB;
-import org.bm.cookbook.db.DBFactory;
 import org.bm.cookbook.utils.CBUtils;
 import org.bm.cookbook.utils.HSQLDBShutdownHook;
-import org.hsqldb.cmdline.SqlFile;
-import org.hsqldb.cmdline.SqlToolError;
 
 public class DefaultDB implements DB {
 	private Connection _conn = null;
@@ -78,13 +74,7 @@ public class DefaultDB implements DB {
 	}
 	
 	@Override
-	public void runScript(String filename) throws SQLException, IOException, SqlToolError {
-		
-		SqlFile sqlFile = new SqlFile(new File(filename));
-		sqlFile.setConnection(DBFactory.get().getDB().getConnection());
-		sqlFile.execute();
-		
+	public void runScript(String filename) throws SQLException, IOException {
 		
 	}
-
 }

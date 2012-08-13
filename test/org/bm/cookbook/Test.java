@@ -12,21 +12,28 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Collection;
+import java.util.List;
+
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityTransaction;
+import javax.persistence.Persistence;
+import javax.persistence.Query;
 
 import org.apache.commons.io.IOUtils;
 import org.bm.cookbook.db.DB;
 import org.bm.cookbook.db.DBFactory;
-import org.bm.cookbook.db.model.Ingredient;
-import org.bm.cookbook.db.model.NamedImage;
 import org.bm.cookbook.db.model.Unit;
 import org.bm.cookbook.db.scripts.Scripts;
-import org.hsqldb.cmdline.SqlToolError;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 
 public class Test {
+	private static EntityManager em;
+	private static EntityTransaction transaction = null;
 
 	@org.junit.Test
-	public void test() throws SQLException, SqlToolError, IOException {
+	public void test() throws SQLException, IOException {
 		DB db = DBFactory.get().getDB();
 
 		db.runScript(Scripts.getFile("test.sql"));
@@ -77,30 +84,46 @@ public class Test {
 	}
 
 	@org.junit.Test
-	public void testData() throws SqlToolError, SQLException, IOException {
-		DB db = DBFactory.get().getDB();
-
-		db.runScript(Scripts.getFile("CLEAN_ALL.SQL"));
-		db.runScript(Scripts.getFile("COOKBOOK.SQL"));
-		db.runScript(Scripts.getFile("SOME_DATA.SQL"));
-
-		Collection<Unit> units = Unit.findAll();
-		for (Unit unit : units) {
-			System.out.println(unit);
-		}
+	public void testData() throws SQLException, IOException {
 		
-		Collection<NamedImage> images = NamedImage.findAll();
-		for(NamedImage ni : images) {
-			System.out.println(ni);
-		}
+		Unit gramme = new Unit();
+		gramme.setName("gramme");
+		gramme.setAbbreviation("g");
 		
-		Collection<Ingredient> ingredients = Ingredient.findAll();
-		for (Ingredient ingredient : ingredients) {
-			System.out.println(ingredient);
-		}
+		em.persist(gramme);
+		
+		Unit oz = new Unit();
+		oz.setName("oz");
+		oz.setAbbreviation("oz");
+		
+		em.persist(oz);
+		
+		
 
-		db.runScript(Scripts.getFile("CLEAN_ALL.SQL"));
+		Query query = em.createNamedQuery("findAllUnit");
+		@SuppressWarnings("unchecked")
+		List<Unit> resultList = query.getResultList();
+
+		for (Unit unit : resultList) {
+			System.out.println(unit.getOid() + " " + unit.getName() + " " + unit.getAbbreviation() + "("+unit.getVersion()+") : at "+unit.getCreationDate());
+		}
 
 	}
 
+	@BeforeClass
+	public static void setUp() {
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory(null);
+
+		em = emf.createEntityManager();
+
+		transaction = em.getTransaction();
+
+		transaction.begin();
+	}
+
+	@AfterClass
+	public static void tearDown() {
+		transaction.rollback();
+		em.close();
+	}
 }

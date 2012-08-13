@@ -1,138 +1,129 @@
 package org.bm.cookbook.db.model;
 
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.Collection;
+import java.io.Serializable;
+import javax.persistence.*;
+import java.util.Date;
 
-import org.bm.cookbook.db.DB;
-import org.bm.cookbook.db.DBFactory;
-import org.bm.cookbook.db.DBObject;
-import org.bm.cookbook.db.IOID;
-import org.bm.cookbook.db.impl.OID;
 
-public class Ingredient extends DBObject {
+/**
+ * The persistent class for the INGREDIENT database table.
+ * 
+ */
+@Entity
+public class Ingredient implements Serializable {
+	private static final long serialVersionUID = 1L;
+
+	@Id
+	@SequenceGenerator(name="INGREDIENT_OID_GENERATOR", sequenceName="INGREDIENT_DB_ID")
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="INGREDIENT_OID_GENERATOR")
+	@Column(name="INGREDIENT_DB_ID")
+	private int oid;
+
+	@Temporal(TemporalType.DATE)
+	@Column(name="CREATION_DATE", updatable=false)
+	private Date creationDate;
 
 	private String name;
-	private NamedImage image;
 
-	public Ingredient(IOID oid, String name, NamedImage image) {
-		super(oid);
-		this.name = name;
-		this.image = image;
+	private int quantity;
+
+	@Temporal(TemporalType.DATE)
+	@Column(name="UPDATING_DATE")
+	private Date updatingDate;
+
+	@Version
+	private int version;
+
+	//uni-directional many-to-one association to Image
+	@ManyToOne
+	@JoinColumn(name="IMAGE_DB_ID")
+	private Image image;
+
+	//bi-directional many-to-one association to Recipe
+	@ManyToOne
+	@JoinColumn(name="RECIPE_DB_ID")
+	private Recipe recipe;
+
+	//uni-directional many-to-one association to Unit
+	@ManyToOne
+	@JoinColumn(name="UNIT_DB_ID")
+	private Unit unit;
+
+	public Ingredient() {
+		creationDate = new Date();
+		version = 1;
+	}
+
+	public int getOid() {
+		return this.oid;
+	}
+
+	public void setOid(int oid) {
+		this.oid = oid;
+	}
+
+	public Date getCreationDate() {
+		return this.creationDate;
+	}
+
+	public void setCreationDate(Date creationDate) {
+		this.creationDate = creationDate;
 	}
 
 	public String getName() {
-		return name;
-	}
-
-	public NamedImage getImage() {
-		return image;
+		return this.name;
 	}
 
 	public void setName(String name) {
 		this.name = name;
 	}
 
-	public void setImage(NamedImage image) {
+	public int getQuantity() {
+		return this.quantity;
+	}
+
+	public void setQuantity(int quantity) {
+		this.quantity = quantity;
+	}
+
+	public Date getUpdatingDate() {
+		return this.updatingDate;
+	}
+
+	public void setUpdatingDate(Date updatingDate) {
+		this.updatingDate = updatingDate;
+	}
+
+	public int getVersion() {
+		return this.version;
+	}
+
+	public void setVersion(int version) {
+		this.version = version;
+	}
+
+	public Image getImage() {
+		return this.image;
+	}
+
+	public void setImage(Image image) {
 		this.image = image;
 	}
 
-	public static Ingredient findByOID(IOID oid) throws SQLException, IOException {
-		DB db = DBFactory.get().getDB();
-
-		Connection c = db.getConnection();
-
-		PreparedStatement pStmt = c
-				.prepareStatement("SELECT name, image_db_id FROM ingredient WHERE ingredient_db_id = ? ");
-		ResultSet rs = pStmt.executeQuery();
-
-		Ingredient i = null;
-		if (rs.next()) {
-			String name = rs.getString("name");
-			IOID imageOID = new OID(rs.getLong("image_db_id"));
-
-			i = new Ingredient(oid, name, NamedImage.findByOID(imageOID));
-
-		} else {
-			// no row returned
-		}
-
-		return i;
+	public Recipe getRecipe() {
+		return this.recipe;
 	}
 
-	public static Ingredient findByName(String name) throws SQLException, IOException {
-		DB db = DBFactory.get().getDB();
-
-		Connection c = db.getConnection();
-
-		PreparedStatement pStmt = c
-				.prepareStatement("SELECT ingredient_db_id, image_db_id FROM ingredient WHERE name = ? ");
-		ResultSet rs = pStmt.executeQuery();
-
-		Ingredient i = null;
-		if (rs.next()) {
-			IOID oid = new OID(rs.getLong("ingredient_db_id"));
-			IOID imageOID = new OID(rs.getLong("image_db_id"));
-
-			i = new Ingredient(oid, name, NamedImage.findByOID(imageOID));
-
-		} else {
-			// no row returned
-		}
-
-		return i;
+	public void setRecipe(Recipe recipe) {
+		this.recipe = recipe;
 	}
 
-	public static boolean insert(Ingredient ingredient) throws SQLException {
-		DB db = DBFactory.get().getDB();
-
-		Connection c = db.getConnection();
-
-		PreparedStatement pStmt = c
-				.prepareStatement("INSERT INTO ingredient(ingredient_db_id, name, image_db_id) VALUE(?, ?, ?) ");
-		pStmt.setLong(1, ingredient.getOID().getOID());
-		pStmt.setString(2, ingredient.getName());
-		pStmt.setLong(3, ingredient.getImage().getOID().getOID());
-
-		boolean result = pStmt.execute();
-
-		pStmt.close();
-
-		return result;
+	public Unit getUnit() {
+		return this.unit;
 	}
 
-	
-	public static Collection<Ingredient> findAll() throws SQLException, IOException {
-		DB db = DBFactory.get().getDB();
-
-		Connection c = db.getConnection();
-
-		Statement stmt = c.createStatement();
-
-		ResultSet rs = stmt.executeQuery("SELECT ingredient_db_id, name, image_db_id FROM ingredient");
-
-		Collection<Ingredient> ingredients = new ArrayList<Ingredient>();
-
-		while (rs.next()) {
-			IOID oid = new OID(rs.getLong("ingredient_db_id"));
-			String name = rs.getString("name");
-			IOID imageoid = new OID(rs.getLong("image_db_id"));
-
-			Ingredient u = new Ingredient(oid, name, NamedImage.findByOID(imageoid));
-			ingredients.add(u);
-		}
-
-		return ingredients;
+	public void setUnit(Unit unit) {
+		this.unit = unit;
 	}
-	
-	@Override
-	public String toString() {
-		return this.name;
-	}
-	
+
 }

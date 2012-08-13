@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import org.hsqldb.cmdline.SqlToolError;
-
 public interface DB {
 	public static final String DATABASE_NAME = "CookbookDB";
 
@@ -21,5 +19,5 @@ public interface DB {
 
 	void initializeDB();
 	
-	void runScript(String filename) throws SQLException, IOException, SqlToolError;
+	void runScript(String filename) throws SQLException, IOException;
 }
