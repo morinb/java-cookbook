@@ -3,7 +3,7 @@ package org.bm.cookbook.utils;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-import org.bm.cookbook.db.DB;
+import org.jdesktop.swingx.JXErrorPane;
 
 public class HSQLDBShutdownHook implements Runnable {
 
@@ -11,9 +11,9 @@ public class HSQLDBShutdownHook implements Runnable {
 	public void run() {
 		try {
 			DriverManager.getConnection(
-			          "jdbc:hsqldb:file:"+DB.DATABASE_NAME+";shutdown=true", "SA", "");
+			          "jdbc:hsqldb:file:CookbookDB;shutdown=true", "SA", "");
 		} catch (SQLException e) {
-			e.printStackTrace();
+			JXErrorPane.showDialog(e);
 		}
 	}
 

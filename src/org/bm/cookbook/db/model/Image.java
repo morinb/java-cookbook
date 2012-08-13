@@ -1,8 +1,22 @@
 package org.bm.cookbook.db.model;
 
 import java.io.Serializable;
-import javax.persistence.*;
+import java.util.Collection;
 import java.util.Date;
+import java.util.List;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.Version;
+
+import org.hibernate.annotations.NamedQueries;
+import org.hibernate.annotations.NamedQuery;
 
 
 /**
@@ -10,7 +24,12 @@ import java.util.Date;
  * 
  */
 @Entity
-public class Image implements Serializable {
+@NamedQueries({
+	@NamedQuery(name="findImageByOID", query="from Image i where i.oid=:oid"),
+	@NamedQuery(name="findImageByName", query="from Image i where i.name=:name"),
+	@NamedQuery(name="findAllImage", query="from Image i"),
+})
+public class Image extends Model implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -98,4 +117,28 @@ public class Image implements Serializable {
 		this.version = version;
 	}
 
+	@Override
+	public void save() {
+		em.getTransaction().begin();
+		em.persist(this);
+		em.getTransaction().commit();
+	}
+	@Override
+	public void remove() {
+		em.getTransaction().begin();
+		em.remove(this);
+		em.getTransaction().commit();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static Collection<Image> findAll() {
+		List<Image> resultList = em.createNamedQuery("findAllImage").getResultList();
+		return resultList;
+	}
+	
+	@Override
+	public String toString() {
+		return name;
+	}
+	
 }

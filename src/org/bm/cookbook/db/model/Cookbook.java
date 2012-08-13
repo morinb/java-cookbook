@@ -1,45 +1,56 @@
 package org.bm.cookbook.db.model;
 
 import java.io.Serializable;
-import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.Version;
 
 /**
  * The persistent class for the COOKBOOK database table.
  * 
  */
 @Entity
-public class Cookbook implements Serializable {
+public class Cookbook extends Model implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name="COOKBOOK_OID_GENERATOR", sequenceName="COOKBOOK_DB_ID")
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="COOKBOOK_OID_GENERATOR")
-	@Column(name="COOKBOOK_DB_ID")
+	@SequenceGenerator(name = "COOKBOOK_OID_GENERATOR", sequenceName = "COOKBOOK_DB_ID")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "COOKBOOK_OID_GENERATOR")
+	@Column(name = "COOKBOOK_DB_ID")
 	private int oid;
 
 	@Temporal(TemporalType.DATE)
-	@Column(name="CREATION_DATE", updatable=false)
+	@Column(name = "CREATION_DATE", updatable = false)
 	private Date creationDate;
 
 	private String name;
 
 	@Temporal(TemporalType.DATE)
-	@Column(name="UPDATING_DATE")
+	@Column(name = "UPDATING_DATE")
 	private Date updatingDate;
 
 	@Version
 	private int version;
 
-	//uni-directional many-to-one association to Image
+	// uni-directional many-to-one association to Image
 	@ManyToOne
-	@JoinColumn(name="IMAGE_DB_ID")
+	@JoinColumn(name = "IMAGE_DB_ID")
 	private Image image;
 
-	//bi-directional many-to-one association to Recipe
-	@OneToMany(mappedBy="cookbook")
+	// bi-directional many-to-one association to Recipe
+	@OneToMany(mappedBy = "cookbook")
 	private List<Recipe> recipes;
 
 	public Cookbook() {
@@ -101,6 +112,18 @@ public class Cookbook implements Serializable {
 
 	public void setRecipes(List<Recipe> recipes) {
 		this.recipes = recipes;
+	}
+
+	@Override
+	public void save() {
+		em.persist(this);
+	}
+
+	@Override
+	public void remove() {
+		em.getTransaction().begin();
+		em.remove(this);
+		em.getTransaction().commit();
 	}
 
 }

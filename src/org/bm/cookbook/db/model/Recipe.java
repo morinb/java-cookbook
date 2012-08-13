@@ -11,7 +11,7 @@ import java.util.List;
  * 
  */
 @Entity
-public class Recipe implements Serializable {
+public class Recipe extends Model implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -125,4 +125,15 @@ public class Recipe implements Serializable {
 		this.steps = steps;
 	}
 
+	@Override
+	public void save() {
+		em.persist(this);
+	}
+	@Override
+	public void remove() {
+		em.getTransaction().begin();
+		em.remove(this);
+		em.getTransaction().commit();
+	}
+	
 }

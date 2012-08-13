@@ -1,26 +1,36 @@
 package org.bm.cookbook.db.model;
 
 import java.io.Serializable;
-import javax.persistence.*;
 import java.util.Date;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.Version;
 
 /**
  * The persistent class for the INGREDIENT database table.
  * 
  */
 @Entity
-public class Ingredient implements Serializable {
+public class Ingredient extends Model implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name="INGREDIENT_OID_GENERATOR", sequenceName="INGREDIENT_DB_ID")
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="INGREDIENT_OID_GENERATOR")
-	@Column(name="INGREDIENT_DB_ID")
+	@SequenceGenerator(name = "INGREDIENT_OID_GENERATOR", sequenceName = "INGREDIENT_DB_ID")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "INGREDIENT_OID_GENERATOR")
+	@Column(name = "INGREDIENT_DB_ID")
 	private int oid;
 
 	@Temporal(TemporalType.DATE)
-	@Column(name="CREATION_DATE", updatable=false)
+	@Column(name = "CREATION_DATE", updatable = false)
 	private Date creationDate;
 
 	private String name;
@@ -28,25 +38,25 @@ public class Ingredient implements Serializable {
 	private int quantity;
 
 	@Temporal(TemporalType.DATE)
-	@Column(name="UPDATING_DATE")
+	@Column(name = "UPDATING_DATE")
 	private Date updatingDate;
 
 	@Version
 	private int version;
 
-	//uni-directional many-to-one association to Image
+	// uni-directional many-to-one association to Image
 	@ManyToOne
-	@JoinColumn(name="IMAGE_DB_ID")
+	@JoinColumn(name = "IMAGE_DB_ID")
 	private Image image;
 
-	//bi-directional many-to-one association to Recipe
+	// bi-directional many-to-one association to Recipe
 	@ManyToOne
-	@JoinColumn(name="RECIPE_DB_ID")
+	@JoinColumn(name = "RECIPE_DB_ID")
 	private Recipe recipe;
 
-	//uni-directional many-to-one association to Unit
+	// uni-directional many-to-one association to Unit
 	@ManyToOne
-	@JoinColumn(name="UNIT_DB_ID")
+	@JoinColumn(name = "UNIT_DB_ID")
 	private Unit unit;
 
 	public Ingredient() {
@@ -126,4 +136,15 @@ public class Ingredient implements Serializable {
 		this.unit = unit;
 	}
 
+	@Override
+	public void save() {
+		em.persist(this);
+	}
+	@Override
+	public void remove() {
+		em.getTransaction().begin();
+		em.remove(this);
+		em.getTransaction().commit();
+	}
+	
 }

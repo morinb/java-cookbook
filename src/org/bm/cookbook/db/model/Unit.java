@@ -1,7 +1,9 @@
 package org.bm.cookbook.db.model;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -26,7 +28,7 @@ import org.hibernate.annotations.NamedQuery;
 		@NamedQuery(name = "findAllUnit", query = "from Unit u"),
 
 })
-public class Unit implements Serializable {
+public class Unit extends Model implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -103,4 +105,30 @@ public class Unit implements Serializable {
 		this.version = version;
 	}
 
+	@Override
+	public void save() {
+		em.getTransaction().begin();
+		em.persist(this);
+		em.getTransaction().commit();
+	}
+
+	@Override
+	public void remove() {
+		em.getTransaction().begin();
+		em.remove(this);
+		em.getTransaction().commit();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static Collection<Unit> findAll() {
+		List<Unit> resultList = em.createNamedQuery("findAllUnit").getResultList();
+		return resultList;
+	}
+	
+	@Override
+	public String toString() {
+		// TODO Auto-generated method stub
+		return name + " ("+abbreviation+")";
+	}
+	
 }

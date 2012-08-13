@@ -3,6 +3,7 @@ package org.bm.cookbook.utils;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Blob;
@@ -11,6 +12,9 @@ import java.sql.SQLException;
 import javax.imageio.ImageIO;
 
 public class CBUtils {
+	private static final String[] imageExtension = new String[] {
+		"bmp","jpg", "wbmp", "png", "gif"		
+	};
 
 	/**
 	 * Prints details of an SQLException chain to <code>System.err</code>.
@@ -46,4 +50,25 @@ public class CBUtils {
 		return is;
 	}
 
+	public static String getExtension(String filename) {
+		int dotIndex = filename.lastIndexOf('.');
+		if(-1 == dotIndex) {
+			return "";
+		}
+		
+		return filename.substring(dotIndex+1);
+	}
+	public static String getExtension(File file) {
+		String filename=  file.getName();
+		return getExtension(filename);
+	}
+	
+	public static boolean isImageExtension(String extension) {
+		for(String ext : imageExtension) {
+			if(ext.equals(extension)) {
+				return true;
+			}
+		}
+		return false;
+	}
 }
