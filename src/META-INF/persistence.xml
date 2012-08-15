@@ -16,6 +16,7 @@
 			<property name="javax.persistence.jdbc.driver" value="org.hsqldb.jdbc.JDBCDriver" />
 			<property name="javax.persistence.jdbc.url" value="jdbc:hsqldb:CookbookDB" />
 			<property name="hibernate.show.sql" value="true"/>
+			<property name="hibernate.hbm2ddl.auto" value="create"/>
 		</properties>
 	</persistence-unit>
 </persistence>

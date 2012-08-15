@@ -93,7 +93,6 @@ public class ImageFrame extends CookbookInternalFrame {
 				Image i = new Image();
 				i.setName(name.getText());
 				i.setImagePath(path.getText());
-				i.setType(CBUtils.getExtension(path.getText()));
 				i.save();
 				CookbookJXFrame.updateStatus(Messages.getString("ImageFrame.statusTextImageSaved")); //$NON-NLS-1$
 				reload();

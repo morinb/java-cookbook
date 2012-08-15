@@ -47,8 +47,6 @@ public class Image extends Model implements Serializable {
 
 	private String name;
 
-	private String type;
-
 	@Temporal(TemporalType.DATE)
 	@Column(name="UPDATING_DATE")
 	private Date updatingDate;
@@ -91,14 +89,6 @@ public class Image extends Model implements Serializable {
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public String getType() {
-		return this.type;
-	}
-
-	public void setType(String type) {
-		this.type = type;
 	}
 
 	public Date getUpdatingDate() {
