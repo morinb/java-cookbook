@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="create_run_jar" name="Create Runnable Jar for Project java-cookbook with libraries in sub-folder">
+    <!--this file was created by Eclipse Runnable JAR Export Wizard-->
+    <!--ANT 1.7 is required                                        -->
+    <target name="create_run_jar">
+        <jar destfile="C:/Developpement/git/java-cookbook/cookbook.jar">
+            <manifest>
+                <attribute name="Main-Class" value="org.bm.cookbook.CookbookMain"/>
+                <attribute name="Class-Path" value=". cookbook_lib/commons-io-2.4.jar cookbook_lib/jgoodies-forms-1.6.0.jar cookbook_lib/jgoodies-common-1.4.0.jar cookbook_lib/swingx-all-1.6.4.jar cookbook_lib/junit.jar cookbook_lib/org.hamcrest.core_1.1.0.v20090501071000.jar cookbook_lib/hsqldb.jar cookbook_lib/antlr-2.7.7.jar cookbook_lib/dom4j-1.6.1.jar cookbook_lib/hibernate-commons-annotations-4.0.1.Final.jar cookbook_lib/hibernate-core-4.1.6.Final.jar cookbook_lib/hibernate-jpa-2.0-api-1.0.1.Final.jar cookbook_lib/javassist-3.15.0-GA.jar cookbook_lib/jboss-logging-3.1.0.GA.jar cookbook_lib/jboss-transaction-api_1.1_spec-1.0.0.Final.jar cookbook_lib/hibernate-entitymanager-4.1.6.Final.jar"/>
+            	<attribute name="SplashScreen-Image" value="splashscreen.jpg"/>
+            </manifest>
+            <fileset dir="C:/Developpement/git/java-cookbook/bin"/>
+        </jar>
+        <delete dir="C:/Developpement/git/java-cookbook/cookbook_lib"/>
+        <mkdir dir="C:/Developpement/git/java-cookbook/cookbook_lib"/>
+        <copy file="C:/Developpement/git/java-cookbook/commons-io-2.4.jar" todir="C:/Developpement/git/java-cookbook/cookbook_lib"/>
+        <copy file="C:/Developpement/git/java-cookbook/jgoodies-forms-1.6.0.jar" todir="C:/Developpement/git/java-cookbook/cookbook_lib"/>
+        <copy file="C:/Developpement/git/java-cookbook/jgoodies-common-1.4.0.jar" todir="C:/Developpement/git/java-cookbook/cookbook_lib"/>
+        <copy file="C:/Developpement/git/java-cookbook/swingx-all-1.6.4.jar" todir="C:/Developpement/git/java-cookbook/cookbook_lib"/>
+        <copy file="C:/Developpement/eclipse/plugins/org.junit_4.10.0.v4_10_0_v20120426-0900/junit.jar" todir="C:/Developpement/git/java-cookbook/cookbook_lib"/>
+        <copy file="C:/Developpement/eclipse/plugins/org.hamcrest.core_1.1.0.v20090501071000.jar" todir="C:/Developpement/git/java-cookbook/cookbook_lib"/>
+        <copy file="C:/Developpement/lib/hsqldb-2.2.9/hsqldb/lib/hsqldb.jar" todir="C:/Developpement/git/java-cookbook/cookbook_lib"/>
+        <copy file="C:/Developpement/lib/hibernate-release-4.1.6.Final/lib/required/antlr-2.7.7.jar" todir="C:/Developpement/git/java-cookbook/cookbook_lib"/>
+        <copy file="C:/Developpement/lib/hibernate-release-4.1.6.Final/lib/required/dom4j-1.6.1.jar" todir="C:/Developpement/git/java-cookbook/cookbook_lib"/>
+        <copy file="C:/Developpement/lib/hibernate-release-4.1.6.Final/lib/required/hibernate-commons-annotations-4.0.1.Final.jar" todir="C:/Developpement/git/java-cookbook/cookbook_lib"/>
+        <copy file="C:/Developpement/lib/hibernate-release-4.1.6.Final/lib/required/hibernate-core-4.1.6.Final.jar" todir="C:/Developpement/git/java-cookbook/cookbook_lib"/>
+        <copy file="C:/Developpement/lib/hibernate-release-4.1.6.Final/lib/required/hibernate-jpa-2.0-api-1.0.1.Final.jar" todir="C:/Developpement/git/java-cookbook/cookbook_lib"/>
+        <copy file="C:/Developpement/lib/hibernate-release-4.1.6.Final/lib/required/javassist-3.15.0-GA.jar" todir="C:/Developpement/git/java-cookbook/cookbook_lib"/>
+        <copy file="C:/Developpement/lib/hibernate-release-4.1.6.Final/lib/required/jboss-logging-3.1.0.GA.jar" todir="C:/Developpement/git/java-cookbook/cookbook_lib"/>
+        <copy file="C:/Developpement/lib/hibernate-release-4.1.6.Final/lib/required/jboss-transaction-api_1.1_spec-1.0.0.Final.jar" todir="C:/Developpement/git/java-cookbook/cookbook_lib"/>
+        <copy file="C:/Developpement/lib/hibernate-release-4.1.6.Final/lib/jpa/hibernate-entitymanager-4.1.6.Final.jar" todir="C:/Developpement/git/java-cookbook/cookbook_lib"/>
+    </target>
+</project>

@@ -1,0 +1,1 @@
+java -splash:splashscreen.jpg -jar cookbook.jar
