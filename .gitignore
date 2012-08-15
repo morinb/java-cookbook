@@ -17,3 +17,6 @@ CookbookDB/
 *.jar
 *.war
 *.ear
+
+# bat files
+Sign jar.bat

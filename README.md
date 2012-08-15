@@ -1,7 +1,7 @@
 java-cookbook
 =============
 
-need those libraries :
+need Java 7 and those libraries :
 * [hsqldb-2.2.9](http://sourceforge.net/projects/hsqldb/files/hsqldb/hsqldb_2_2/)
 * [commons-io-2.4](http://commons.apache.org/io/download_io.cgi)
 * [jgoodies-common-1.4.0](http://www.jgoodies.com/downloads/libraries/)
