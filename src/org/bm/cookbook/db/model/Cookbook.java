@@ -17,12 +17,18 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Version;
 
+import org.hibernate.annotations.NamedQueries;
+import org.hibernate.annotations.NamedQuery;
+
 /**
  * The persistent class for the COOKBOOK database table.
  * 
  */
 @Entity
-public class Cookbook extends Model implements Serializable {
+@NamedQueries({
+	@NamedQuery(name="findAllCookbook", query="from Cookbook c")
+})
+public class Cookbook extends Model implements Serializable, HasImage {
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -98,6 +104,7 @@ public class Cookbook extends Model implements Serializable {
 		this.version = version;
 	}
 
+	@Override
 	public Image getImage() {
 		return this.image;
 	}
@@ -114,16 +121,6 @@ public class Cookbook extends Model implements Serializable {
 		this.recipes = recipes;
 	}
 
-	@Override
-	public void save() {
-		em.persist(this);
-	}
-
-	@Override
-	public void remove() {
-		em.getTransaction().begin();
-		em.remove(this);
-		em.getTransaction().commit();
-	}
+	
 
 }

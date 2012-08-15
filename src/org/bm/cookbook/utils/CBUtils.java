@@ -8,13 +8,16 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Blob;
 import java.sql.SQLException;
+import java.util.logging.Level;
 
 import javax.imageio.ImageIO;
 
+import org.bm.cookbook.gui.Messages;
+import org.jdesktop.swingx.JXErrorPane;
+import org.jdesktop.swingx.error.ErrorInfo;
+
 public class CBUtils {
-	private static final String[] imageExtension = new String[] {
-		"bmp","jpg", "wbmp", "png", "gif"		
-	};
+	private static final String[] imageExtension = new String[] { "bmp", "jpg", "wbmp", "png", "gif" };
 
 	/**
 	 * Prints details of an SQLException chain to <code>System.err</code>.
@@ -52,23 +55,31 @@ public class CBUtils {
 
 	public static String getExtension(String filename) {
 		int dotIndex = filename.lastIndexOf('.');
-		if(-1 == dotIndex) {
+		if (-1 == dotIndex) {
 			return "";
 		}
-		
-		return filename.substring(dotIndex+1);
+
+		return filename.substring(dotIndex + 1);
 	}
+
 	public static String getExtension(File file) {
-		String filename=  file.getName();
+		String filename = file.getName();
 		return getExtension(filename);
 	}
-	
+
 	public static boolean isImageExtension(String extension) {
-		for(String ext : imageExtension) {
-			if(ext.equals(extension)) {
+		for (String ext : imageExtension) {
+			if (ext.equals(extension)) {
 				return true;
 			}
 		}
 		return false;
 	}
+
+	public static void handleException(String name, Throwable t) {
+		ErrorInfo ei = new ErrorInfo(Messages.getString("exception.JXError.title"), t.getMessage(), null,
+				name, t, Level.SEVERE, null);
+		JXErrorPane.showDialog(null, ei);
+	}
+
 }

@@ -1,25 +1,18 @@
 package org.bm.cookbook.gui.frames;
 
-import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.imageio.ImageIO;
-import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
-import javax.swing.JLabel;
 import javax.swing.JList;
-import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
@@ -30,6 +23,9 @@ import javax.swing.filechooser.FileFilter;
 import org.bm.cookbook.db.model.Image;
 import org.bm.cookbook.db.model.Model;
 import org.bm.cookbook.gui.Messages;
+import org.bm.cookbook.gui.frames.renderers.ImageListCellRenderer;
+import org.bm.cookbook.gui.utils.GuiError;
+import org.bm.cookbook.gui.utils.GuiErrorList;
 import org.bm.cookbook.gui.utils.ImagePanel;
 import org.bm.cookbook.gui.utils.ImagePreviewPanel;
 import org.bm.cookbook.utils.CBUtils;
@@ -52,7 +48,7 @@ public class ImageFrame extends CookbookInternalFrame {
 	private JTextField name;
 	private JButton search;
 
-	private ImagePanel image;
+	private ImagePanel imagePanel;
 
 	private JList<Image> imageList;
 
@@ -64,29 +60,25 @@ public class ImageFrame extends CookbookInternalFrame {
 		FormLayout layout = new FormLayout("p, 4dlu, p, 4dlu, p", "p, 2dlu, p, 2dlu, p, 2dlu, f:p:g"); //$NON-NLS-1$ //$NON-NLS-2$
 
 		add = new JButton(Messages.getString("ImageFrame.buttonAdd")); //$NON-NLS-1$
-		
+
 		add.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Collection<Component> badComponents = new ArrayList<Component>();
-
+				GuiErrorList l = new GuiErrorList(ImageFrame.this);
 				if (name.getText().isEmpty()) {
-					badComponents.add(name);
+					l.add(new GuiError(name, Messages.getString("errors.nameNotEmpty")));
+				} else {
+					Image i = Image.findByName(name.getText());
+					if (null != i) {
+						l.add(new GuiError(null, Messages.getString("errors.imageAlreadyExists")));
+					}
 				}
 
 				if (path.getText().isEmpty()) {
-					badComponents.add(path);
+					l.add(new GuiError(path, Messages.getString("errors.imagePathNotEmpty")));
 				}
 
-				if (!badComponents.isEmpty()) {
-					JOptionPane.showMessageDialog(
-							ImageFrame.this,
-							Messages.getString("UnitFrame.notEmptyMessage"), Messages.getString("UnitFrame.errorWarning"), JOptionPane.WARNING_MESSAGE); //$NON-NLS-1$ //$NON-NLS-2$
-
-					for (Component c : badComponents) {
-						c.setBackground(ERROR_BACKGROUND_COLOR);
-					}
-
+				if (l.showErrors()) {
 					return;
 				}
 
@@ -94,7 +86,7 @@ public class ImageFrame extends CookbookInternalFrame {
 				i.setName(name.getText());
 				i.setImagePath(path.getText());
 				i.save();
-				CookbookJXFrame.updateStatus(Messages.getString("ImageFrame.statusTextImageSaved")); //$NON-NLS-1$
+				MainFrame.updateStatus(Messages.getString("Frame.statusTextDataDeleted")); //$NON-NLS-1$
 				reload();
 			}
 		});
@@ -105,7 +97,7 @@ public class ImageFrame extends CookbookInternalFrame {
 				if (current != null) {
 					current.remove();
 					current = null;
-					CookbookJXFrame.updateStatus(Messages.getString("ImageFrame.statusTextImageDeleted")); //$NON-NLS-1$
+					MainFrame.updateStatus(Messages.getString("Frame.statusTextDataSaved")); //$NON-NLS-1$
 					reload();
 				}
 			}
@@ -120,7 +112,7 @@ public class ImageFrame extends CookbookInternalFrame {
 					current.setName(name.getText());
 					current.setImagePath(path.getText());
 					Model.getEm().getTransaction().commit();
-					CookbookJXFrame.updateStatus(Messages.getString("ImageFrame.statusTextImageUpdated")); //$NON-NLS-1$
+					MainFrame.updateStatus(Messages.getString("Frame.statusTextDataUpdated")); //$NON-NLS-1$
 					reload();
 				}
 			}
@@ -164,77 +156,39 @@ public class ImageFrame extends CookbookInternalFrame {
 					try {
 						BufferedImage i = ImageIO.read(selectedFile);
 
-						image.setImage(i);
+						imagePanel.setImage(i);
 					} catch (IOException e1) {
 						JXErrorPane.showDialog(e1);
 					}
 				}
 			}
 		});
-		image = new ImagePanel();
+		imagePanel = new ImagePanel();
 
 		imageList = new JList<Image>();
-		
+
 		imageList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		imageList.setPreferredSize(new Dimension(150, 200));
 		imageList.setSize(new Dimension(150, 200));
-		imageList.setCellRenderer(new DefaultListCellRenderer() {
-			@Override
-			public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected,
-					boolean cellHasFocus) {
-				JLabel c = (JLabel)super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-				
-				if(value instanceof Image) {
-					Image image = (Image)value;
-					try {
-						BufferedImage bi = ImageIO.read(new File(image.getImagePath()));
-						int imageWidth = bi.getWidth();
-						int imageHeight = bi.getHeight();
-						
-						double scale =(double)36/imageWidth; 
-						int newHeight = (int) (scale * imageHeight);
-						
-						BufferedImage i = new BufferedImage(36, newHeight, BufferedImage.TYPE_INT_ARGB);
-						
-						
-						Graphics g = i.getGraphics();
-						g.drawImage(bi, 0, 0, 36, newHeight, this);
-						
-						ImageIcon ii = new ImageIcon(i);
-						
-						c.setIcon(ii);
-					} catch (IOException e) {
-						JXErrorPane.showFrame(e);
-					}
-				}
-				
-				return c;
-			}
-		});
+		imageList.setCellRenderer(new ImageListCellRenderer(48));
 
 		imageList.addListSelectionListener(new ListSelectionListener() {
 
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
-				
+
 				current = imageList.getSelectedValue();
 				if (null != current) {
 					name.setText(current.getName());
 					path.setText(current.getImagePath());
-					BufferedImage i = null;
-					try {
-						i = ImageIO.read(new File(path.getText()));
-					} catch (IOException e1) {
-						JXErrorPane.showFrame(e1);
-					}
-					image.setImage(i);
+					BufferedImage i = current.getBufferedImage();
+					imagePanel.setImage(i);
 				} else {
 					reset();
 				}
 			}
 		});
-		reload();
-		
+
 		PanelBuilder pb = new PanelBuilder(layout);
 		pb.border(Borders.DIALOG);
 		pb.add(add, CC.xy(1, 1));
@@ -245,9 +199,9 @@ public class ImageFrame extends CookbookInternalFrame {
 		pb.add(name, CC.xyw(1, 5, 3));
 		pb.add(search, CC.xy(5, 5));
 
-		
-		pb.add(image, CC.xy(1, 7));
-		JScrollPane sp = new JScrollPane(imageList, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		pb.add(imagePanel, CC.xy(1, 7));
+		JScrollPane sp = new JScrollPane(imageList, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		sp.setPreferredSize(new Dimension(155, 205));
 		pb.add(sp, CC.xyw(3, 7, 3));
 
@@ -256,11 +210,11 @@ public class ImageFrame extends CookbookInternalFrame {
 
 	@Override
 	protected void reload() {
-		super.reload();
+		reset();
 
 		DefaultListModel<Image> m = new DefaultListModel<>();
 
-		Collection<Image> images = Image.findAll();
+		Collection<Image> images = Image.findAll(Image.class);
 		for (Image image : images) {
 			m.addElement(image);
 		}
@@ -271,8 +225,10 @@ public class ImageFrame extends CookbookInternalFrame {
 
 	@Override
 	protected void reset() {
-		image.setImage(null);
-		name.setText("");
-		path.setText("");
+		imagePanel.setImage(null);
+		name.setBackground(NORMAL_BACKGROUND_TEXT_COLOR);
+		name.setText(""); //$NON-NLS-1$
+		path.setBackground(NORMAL_BACKGROUND_TEXT_COLOR);
+		path.setText(""); //$NON-NLS-1$
 	}
 }

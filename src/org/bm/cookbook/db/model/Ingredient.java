@@ -15,12 +15,17 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Version;
 
+import org.hibernate.annotations.NamedQueries;
+import org.hibernate.annotations.NamedQuery;
+
 /**
  * The persistent class for the INGREDIENT database table.
  * 
  */
 @Entity
-public class Ingredient extends Model implements Serializable {
+@NamedQueries({ @NamedQuery(name = "findIngredientByName", query = "from Ingredient i where i.name=:name"),
+		@NamedQuery(name = "findAllIngredient", query = "from Ingredient i"), })
+public class Ingredient extends Model implements Serializable, HasImage {
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -35,8 +40,6 @@ public class Ingredient extends Model implements Serializable {
 
 	private String name;
 
-	private int quantity;
-
 	@Temporal(TemporalType.DATE)
 	@Column(name = "UPDATING_DATE")
 	private Date updatingDate;
@@ -48,16 +51,6 @@ public class Ingredient extends Model implements Serializable {
 	@ManyToOne
 	@JoinColumn(name = "IMAGE_DB_ID")
 	private Image image;
-
-	// bi-directional many-to-one association to Recipe
-	@ManyToOne
-	@JoinColumn(name = "RECIPE_DB_ID")
-	private Recipe recipe;
-
-	// uni-directional many-to-one association to Unit
-	@ManyToOne
-	@JoinColumn(name = "UNIT_DB_ID")
-	private Unit unit;
 
 	public Ingredient() {
 		creationDate = new Date();
@@ -88,14 +81,6 @@ public class Ingredient extends Model implements Serializable {
 		this.name = name;
 	}
 
-	public int getQuantity() {
-		return this.quantity;
-	}
-
-	public void setQuantity(int quantity) {
-		this.quantity = quantity;
-	}
-
 	public Date getUpdatingDate() {
 		return this.updatingDate;
 	}
@@ -112,6 +97,7 @@ public class Ingredient extends Model implements Serializable {
 		this.version = version;
 	}
 
+	@Override
 	public Image getImage() {
 		return this.image;
 	}
@@ -120,31 +106,14 @@ public class Ingredient extends Model implements Serializable {
 		this.image = image;
 	}
 
-	public Recipe getRecipe() {
-		return this.recipe;
-	}
-
-	public void setRecipe(Recipe recipe) {
-		this.recipe = recipe;
-	}
-
-	public Unit getUnit() {
-		return this.unit;
-	}
-
-	public void setUnit(Unit unit) {
-		this.unit = unit;
+	public static Ingredient findByName(String name) {
+		Ingredient i = (Ingredient) getSingleResult(Ingredient.class, "findIngredientByName", getList("name"),
+				getList(name));
+		return i;
 	}
 
 	@Override
-	public void save() {
-		em.persist(this);
+	public String toString() {
+		return name;
 	}
-	@Override
-	public void remove() {
-		em.getTransaction().begin();
-		em.remove(this);
-		em.getTransaction().commit();
-	}
-	
 }

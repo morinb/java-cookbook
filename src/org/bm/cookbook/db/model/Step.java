@@ -23,7 +23,7 @@ import org.hibernate.annotations.NamedQuery;
 @Entity
 @NamedQueries(value = { @NamedQuery(name = "findStepByOID", query = "from Step u where u.id.oid=:oid"),
 		@NamedQuery(name = "findAllStep", query = "from Step u"), })
-@Table(name = "RECIPE_STEP")
+@Table(name = "Recipe_Step")
 public class Step extends Model implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -101,15 +101,5 @@ public class Step extends Model implements Serializable {
 		this.recipe = recipe;
 	}
 
-	@Override
-	public void save() {
-		em.persist(this);
-	}
-	@Override
-	public void remove() {
-		em.getTransaction().begin();
-		em.remove(this);
-		em.getTransaction().commit();
-	}
-	
+
 }

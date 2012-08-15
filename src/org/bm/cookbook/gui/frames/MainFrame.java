@@ -9,6 +9,7 @@ import java.beans.PropertyVetoException;
 import javax.persistence.Persistence;
 import javax.swing.Box;
 import javax.swing.JDesktopPane;
+import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -25,11 +26,10 @@ import javax.swing.event.ChangeListener;
 import org.bm.cookbook.gui.DesktopManager;
 import org.bm.cookbook.gui.Messages;
 import org.jdesktop.swingx.JXErrorPane;
-import org.jdesktop.swingx.JXFrame;
 import org.jdesktop.swingx.JXStatusBar;
 
 @SuppressWarnings("serial")
-public class CookbookJXFrame extends JXFrame {
+public class MainFrame extends JFrame {
 	private final JDesktopPane desktop;
 	private JMenu menuWindow;
 
@@ -42,7 +42,7 @@ public class CookbookJXFrame extends JXFrame {
 		}
 	});
 
-	public CookbookJXFrame() {
+	public MainFrame() {
 		super(Messages.getString("CookbookFrame.title")); //$NON-NLS-1$
 		Persistence.createEntityManagerFactory(null);
 		DesktopManager.get().addChangeListener(new ChangeListener() {
@@ -73,7 +73,7 @@ public class CookbookJXFrame extends JXFrame {
 		statusBar.add(statusLabel);
 
 		contentPane.add(statusBar, BorderLayout.SOUTH);
-		updateStatus(Messages.getString("CookbookJXFrame.statusApplicationStarted")); //$NON-NLS-1$
+		updateStatus(Messages.getString("Frame.statusApplicationStarted")); //$NON-NLS-1$
 	}
 
 	private void createMenuBar(JMenuBar menuBar) {
@@ -231,7 +231,7 @@ public class CookbookJXFrame extends JXFrame {
 							| UnsupportedLookAndFeelException e1) {
 						JXErrorPane.showDialog(e1);
 					}
-					SwingUtilities.updateComponentTreeUI(CookbookJXFrame.this);
+					SwingUtilities.updateComponentTreeUI(MainFrame.this);
 				}
 			});
 

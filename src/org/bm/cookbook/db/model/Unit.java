@@ -1,9 +1,7 @@
 package org.bm.cookbook.db.model;
 
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -23,7 +21,7 @@ import org.hibernate.annotations.NamedQuery;
  * 
  */
 @Entity
-@NamedQueries(value = { @NamedQuery(name = "findUnitByOID", query = "from Unit u where u.oid=:oid"),
+@NamedQueries({ @NamedQuery(name = "findUnitByOID", query = "from Unit u where u.oid=:oid"),
 		@NamedQuery(name = "findUnitByName", query = "from Unit u where u.name=:name"),
 		@NamedQuery(name = "findAllUnit", query = "from Unit u"),
 
@@ -105,30 +103,15 @@ public class Unit extends Model implements Serializable {
 		this.version = version;
 	}
 
-	@Override
-	public void save() {
-		em.getTransaction().begin();
-		em.persist(this);
-		em.getTransaction().commit();
+	public static Unit findByName(String name) {
+		Unit u = (Unit) getSingleResult(Unit.class,"findUnitByName", getList("name"), getList(name));
+		return u;
 	}
 
 	@Override
-	public void remove() {
-		em.getTransaction().begin();
-		em.remove(this);
-		em.getTransaction().commit();
-	}
-	
-	@SuppressWarnings("unchecked")
-	public static Collection<Unit> findAll() {
-		List<Unit> resultList = em.createNamedQuery("findAllUnit").getResultList();
-		return resultList;
-	}
-	
-	@Override
 	public String toString() {
 		// TODO Auto-generated method stub
-		return name + " ("+abbreviation+")";
+		return name + " (" + abbreviation + ")";
 	}
-	
+
 }

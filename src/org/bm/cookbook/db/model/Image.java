@@ -1,10 +1,13 @@
 package org.bm.cookbook.db.model;
 
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 
+import javax.imageio.ImageIO;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -15,40 +18,40 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Version;
 
+import org.bm.cookbook.gui.Messages;
 import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
-
 
 /**
  * The persistent class for the IMAGE database table.
  * 
  */
 @Entity
-@NamedQueries({
-	@NamedQuery(name="findImageByOID", query="from Image i where i.oid=:oid"),
-	@NamedQuery(name="findImageByName", query="from Image i where i.name=:name"),
-	@NamedQuery(name="findAllImage", query="from Image i"),
-})
+@NamedQueries({ @NamedQuery(name = "findImageByOID", query = "from Image i where i.oid=:oid"),
+		@NamedQuery(name = "findImageByName", query = "from Image i where i.name=:name"),
+		@NamedQuery(name = "findAllImage", query = "from Image i"), })
 public class Image extends Model implements Serializable {
+	public static Image nullImage = new Image(Messages.getString("IngredientFrame.nullImage"));
+	
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name="IMAGE_OID_GENERATOR", sequenceName="IMAGE_DB_ID")
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="IMAGE_OID_GENERATOR")
-	@Column(name="IMAGE_DB_ID")
+	@SequenceGenerator(name = "IMAGE_OID_GENERATOR", sequenceName = "IMAGE_DB_ID")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "IMAGE_OID_GENERATOR")
+	@Column(name = "IMAGE_DB_ID")
 	private int oid;
 
 	@Temporal(TemporalType.DATE)
-	@Column(name="CREATION_DATE", updatable=false)
+	@Column(name = "CREATION_DATE", updatable = false)
 	private Date creationDate;
 
-	@Column(name="IMAGE_PATH")
+	@Column(name = "IMAGE_PATH")
 	private String imagePath;
 
 	private String name;
 
 	@Temporal(TemporalType.DATE)
-	@Column(name="UPDATING_DATE")
+	@Column(name = "UPDATING_DATE")
 	private Date updatingDate;
 
 	@Version
@@ -57,6 +60,11 @@ public class Image extends Model implements Serializable {
 	public Image() {
 		creationDate = new Date();
 		version = 1;
+	}
+	
+	private Image(String name) {
+		this();
+		this.name = name;
 	}
 
 	public int getOid() {
@@ -107,28 +115,29 @@ public class Image extends Model implements Serializable {
 		this.version = version;
 	}
 
-	@Override
-	public void save() {
-		em.getTransaction().begin();
-		em.persist(this);
-		em.getTransaction().commit();
+	public static Image findByName(String name) {
+		Image i = (Image) getSingleResult(Image.class, "findImageByName", getList("name"), getList(name));
+		return i;
 	}
-	@Override
-	public void remove() {
-		em.getTransaction().begin();
-		em.remove(this);
-		em.getTransaction().commit();
-	}
-	
-	@SuppressWarnings("unchecked")
-	public static Collection<Image> findAll() {
-		List<Image> resultList = em.createNamedQuery("findAllImage").getResultList();
-		return resultList;
-	}
-	
+
 	@Override
 	public String toString() {
 		return name;
 	}
-	
+
+	public BufferedImage getBufferedImage() {
+		BufferedImage bi;
+		try {
+			bi = ImageIO.read(new File(imagePath));
+		} catch (Exception e) {
+			bi = new BufferedImage(150, 150, BufferedImage.TYPE_INT_ARGB);
+			Graphics g = bi.getGraphics();
+			g.setColor(Color.black);
+			g.drawRect(1, 1, 150 - 2, 150 - 2);
+			g.drawLine(1, 1, 150 - 2, 150 - 2);
+			g.drawLine(1, 150 - 2, 150 - 2, 1);
+		}
+		return bi;
+	}
+
 }

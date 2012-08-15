@@ -42,7 +42,7 @@ public class Test {
 
 	@org.junit.Test
 	public void testEntities() {
-		Collection<Image> images = Image.findAll();
+		Collection<Image> images = Model.findAll(Image.class);
 		for (Image image : images) {
 			System.out.println(image);
 		}

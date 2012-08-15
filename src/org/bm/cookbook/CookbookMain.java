@@ -6,7 +6,8 @@ import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.WindowConstants;
 import javax.swing.plaf.nimbus.NimbusLookAndFeel;
 
-import org.bm.cookbook.gui.frames.CookbookJXFrame;
+import org.bm.cookbook.gui.frames.MainFrame;
+import org.bm.cookbook.gui.utils.ExceptionHandler;
 import org.jdesktop.swingx.JXErrorPane;
 
 public class CookbookMain {
@@ -20,12 +21,13 @@ public class CookbookMain {
 				} catch (UnsupportedLookAndFeelException e) {
 					JXErrorPane.showDialog(e);
 				}
+				
+				ExceptionHandler.registerExceptionHandler();
 
-				CookbookJXFrame frame = new CookbookJXFrame();
-
+				MainFrame frame = new MainFrame();
 				frame.setSize(800, 600);
-				frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 				frame.setLocationRelativeTo(null);
+				frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 				frame.setVisible(true);
 
 			}

@@ -1,15 +1,13 @@
 package org.bm.cookbook.gui.frames;
 
-import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JList;
-import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.event.ListSelectionEvent;
@@ -18,6 +16,8 @@ import javax.swing.event.ListSelectionListener;
 import org.bm.cookbook.db.model.Model;
 import org.bm.cookbook.db.model.Unit;
 import org.bm.cookbook.gui.Messages;
+import org.bm.cookbook.gui.utils.GuiError;
+import org.bm.cookbook.gui.utils.GuiErrorList;
 import org.jdesktop.swingx.prompt.PromptSupport;
 
 import com.jgoodies.forms.builder.PanelBuilder;
@@ -46,40 +46,41 @@ public class UnitFrame extends CookbookInternalFrame {
 		this.setTitle(Messages.getString("CookbookFrame.itemUnit")); //$NON-NLS-1$
 
 		{
-			FormLayout layout = new FormLayout("p:g, 4dlu, p:g, 4dlu, p:g", "p, 2dlu, p, 2dlu, fill:pref:grow"); //$NON-NLS-1$ //$NON-NLS-2$
-
+			
 			add = new JButton(Messages.getString("UnitFrame.buttonAdd")); //$NON-NLS-1$
 			add.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					Collection<Component> badComponents = new ArrayList<Component>();
+					GuiErrorList l = new GuiErrorList(UnitFrame.this);
 
+					
+					
 					if (name.getText().isEmpty()) {
-						badComponents.add(name);
-					}
-					if (abbreviation.getText().isEmpty()) {
-						badComponents.add(abbreviation);
-					}
-
-					if (!badComponents.isEmpty()) {
-						JOptionPane.showMessageDialog(
-								UnitFrame.this,
-								Messages.getString("UnitFrame.notEmptyMessage"), Messages.getString("UnitFrame.errorWarning"), JOptionPane.WARNING_MESSAGE); //$NON-NLS-1$ //$NON-NLS-2$
-
-						for (Component c : badComponents) {
-							c.setBackground(ERROR_BACKGROUND_COLOR);
+						l.add(new GuiError(name, Messages.getString("errors.nameNotEmpty")));
+					} else {
+						Unit u = Unit.findByName(name.getText());
+						if(null != u) {
+							l.add(new GuiError(null, Messages.getString("errors.unitAlreadyExists")));
 						}
-
-						return;
 					}
+
+					if (abbreviation.getText().isEmpty()) {
+						l.add(new GuiError(abbreviation, Messages.getString("errors.abbreviationNotEmpty")));
+					}
+
+					if(l.showErrors()) {
+						return;
+					} 
 
 					Unit u = new Unit();
 					u.setName(name.getText());
 					u.setAbbreviation(abbreviation.getText());
 					u.save();
-					CookbookJXFrame.updateStatus(Messages.getString("UnitFrame.statusTextUnitSaved")); //$NON-NLS-1$
+					MainFrame.updateStatus(Messages.getString("Frame.statusTextDataSaved")); //$NON-NLS-1$
 					reload();
 				}
+
+				
 			});
 			delete = new JButton(Messages.getString("UnitFrame.buttonDelete")); //$NON-NLS-1$
 			delete.addActionListener(new ActionListener() {
@@ -89,7 +90,7 @@ public class UnitFrame extends CookbookInternalFrame {
 					if (current != null) {
 						current.remove();
 						current = null;
-						CookbookJXFrame.updateStatus(Messages.getString("UnitFrame.statusTextUnitDeleted")); //$NON-NLS-1$
+						MainFrame.updateStatus(Messages.getString("Frame.statusTextDataDeleted")); //$NON-NLS-1$
 						reload();
 					}
 				}
@@ -106,14 +107,14 @@ public class UnitFrame extends CookbookInternalFrame {
 						current.setName(name.getText());
 						current.setAbbreviation(abbreviation.getText());
 						Model.getEm().getTransaction().commit();
-						CookbookJXFrame.updateStatus(Messages.getString("UnitFrame.statusTextUnitUpdated")); //$NON-NLS-1$
+						MainFrame.updateStatus(Messages.getString("Frame.statusTextDataUpdated")); //$NON-NLS-1$
 						reload();
 					}
 				}
 			});
 
 			name = new JTextField();
-			PromptSupport.setPrompt(Messages.getString("UnitFrame.ghostTextEnterName"), name); //$NON-NLS-1$
+			PromptSupport.setPrompt(Messages.getString("Frame.ghostTextEnterName"), name); //$NON-NLS-1$
 			abbreviation = new JTextField();
 			PromptSupport.setPrompt(Messages.getString("UnitFrame.ghostTextEnterAbbreviation"), abbreviation); //$NON-NLS-1$
 			unitsList = new JList<Unit>();
@@ -131,11 +132,11 @@ public class UnitFrame extends CookbookInternalFrame {
 					}
 				}
 			});
-			reload();
+			FormLayout layout = new FormLayout("p:g, 4dlu, p:g, 4dlu, p:g", "p, 2dlu, p, 2dlu, f:p:g"); //$NON-NLS-1$ //$NON-NLS-2$
 
 			PanelBuilder pb = new PanelBuilder(layout);
 			pb.border(Borders.DIALOG);
-			
+
 			pb.add(add, CC.xy(1, 1));
 			pb.add(delete, CC.xy(3, 1));
 			pb.add(update, CC.xy(5, 1));
@@ -144,6 +145,7 @@ public class UnitFrame extends CookbookInternalFrame {
 			pb.add(abbreviation, CC.xy(5, 3));
 
 			JScrollPane sp = new JScrollPane(unitsList);
+			sp.setPreferredSize(new Dimension(155, 205));
 			pb.add(sp, CC.xyw(1, 5, 5));
 
 			this.setContentPane(pb.build());
@@ -153,11 +155,11 @@ public class UnitFrame extends CookbookInternalFrame {
 
 	@Override
 	protected void reload() {
-		super.reload();
+		reset();
 
 		DefaultListModel<Unit> m = new DefaultListModel<>();
 
-		Collection<Unit> units = Unit.findAll();
+		Collection<Unit> units = Model.findAll(Unit.class);
 		for (Unit unit : units) {
 			m.addElement(unit);
 		}
@@ -168,8 +170,8 @@ public class UnitFrame extends CookbookInternalFrame {
 
 	@Override
 	protected void reset() {
-		name.setBackground(NORMAL_BACKGROUND_COLOR);
-		abbreviation.setBackground(NORMAL_BACKGROUND_COLOR);
+		name.setBackground(NORMAL_BACKGROUND_TEXT_COLOR);
+		abbreviation.setBackground(NORMAL_BACKGROUND_TEXT_COLOR);
 		name.setText(""); //$NON-NLS-1$
 		abbreviation.setText(""); //$NON-NLS-1$
 	}

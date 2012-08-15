@@ -6,7 +6,7 @@ import javax.persistence.metamodel.ListAttribute;
 import javax.persistence.metamodel.SingularAttribute;
 import javax.persistence.metamodel.StaticMetamodel;
 
-@Generated(value="Dali", date="2012-08-13T03:05:53.645+0200")
+@Generated(value="Dali", date="2012-08-15T18:23:41.286+0200")
 @StaticMetamodel(Cookbook.class)
 public class Cookbook_ {
 	public static volatile SingularAttribute<Cookbook, Integer> oid;

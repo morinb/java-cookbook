@@ -1,56 +1,82 @@
 package org.bm.cookbook.db.model;
 
 import java.io.Serializable;
-import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.Version;
+
+import org.hibernate.annotations.NamedQueries;
+import org.hibernate.annotations.NamedQuery;
 
 /**
  * The persistent class for the RECIPE database table.
  * 
  */
 @Entity
-public class Recipe extends Model implements Serializable {
+@NamedQueries({
+	@NamedQuery(name="findAllRecipe", query="from Recipe r")
+	
+})
+public class Recipe extends Model implements Serializable, HasImage, Cloneable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name="RECIPE_OID_GENERATOR", sequenceName="RECIPE_DB_ID")
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="RECIPE_OID_GENERATOR")
-	@Column(name="RECIPE_DB_ID")
+	@SequenceGenerator(name = "RECIPE_OID_GENERATOR", sequenceName = "RECIPE_DB_ID")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "RECIPE_OID_GENERATOR")
+	@Column(name = "RECIPE_DB_ID")
 	private int oid;
 
 	@Temporal(TemporalType.DATE)
-	@Column(name="CREATION_DATE", updatable=false)
+	@Column(name = "CREATION_DATE", updatable = false)
 	private Date creationDate;
 
-	private String preheat;
+	private boolean preheat;
 
 	private String title;
 
 	@Temporal(TemporalType.DATE)
-	@Column(name="UPDATING_DATE")
+	@Column(name = "UPDATING_DATE")
 	private Date updatingDate;
 
 	@Version
 	private int version;
 
-	//bi-directional many-to-one association to Ingredient
-	@OneToMany(mappedBy="recipe")
-	private List<Ingredient> ingredients;
+	// bi-directional many-to-one association to Ingredient
+	@OneToMany(mappedBy = "recipe")
+	private List<RecipeIngredient> recipeIngredients;
 
-	//bi-directional many-to-one association to Cookbook
+	// bi-directional many-to-one association to Cookbook
 	@ManyToOne
-	@JoinColumn(name="COOKBOOK_DB_ID")
+	@JoinColumn(name = "COOKBOOK_DB_ID")
 	private Cookbook cookbook;
 
-	//bi-directional many-to-one association to Step
-	@OneToMany(mappedBy="recipe")
+	// bi-directional many-to-one association to Step
+	@OneToMany(mappedBy = "recipe")
 	private List<Step> steps;
+
+	// uni-directional many-to-one association to Image
+	@ManyToOne
+	@JoinColumn(name = "IMAGE_DB_ID")
+	private Image image;
 
 	public Recipe() {
 		creationDate = new Date();
 		version = 1;
+		recipeIngredients = new ArrayList<>();
+		steps = new ArrayList<>();
 	}
 
 	public int getOid() {
@@ -69,11 +95,11 @@ public class Recipe extends Model implements Serializable {
 		this.creationDate = creationDate;
 	}
 
-	public String getPreheat() {
+	public boolean getPreheat() {
 		return this.preheat;
 	}
 
-	public void setPreheat(String preheat) {
+	public void setPreheat(boolean preheat) {
 		this.preheat = preheat;
 	}
 
@@ -101,12 +127,12 @@ public class Recipe extends Model implements Serializable {
 		this.version = version;
 	}
 
-	public List<Ingredient> getIngredients() {
-		return this.ingredients;
+	public List<RecipeIngredient> getRecipeIngredients() {
+		return this.recipeIngredients;
 	}
 
-	public void setIngredients(List<Ingredient> ingredients) {
-		this.ingredients = ingredients;
+	public void setRecipeIngredients(List<RecipeIngredient> recipeIngredients) {
+		this.recipeIngredients = recipeIngredients;
 	}
 
 	public Cookbook getCookbook() {
@@ -126,14 +152,24 @@ public class Recipe extends Model implements Serializable {
 	}
 
 	@Override
-	public void save() {
-		em.persist(this);
+	public Image getImage() {
+		return image;
 	}
+
+	public void setImage(Image image) {
+		this.image = image;
+	}
+
 	@Override
-	public void remove() {
-		em.getTransaction().begin();
-		em.remove(this);
-		em.getTransaction().commit();
+	public String toString() {
+		return title;
 	}
 	
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		Object o = super.clone();
+				
+		return o;
+	}
+
 }
