@@ -25,9 +25,7 @@ import org.hibernate.annotations.NamedQuery;
  * 
  */
 @Entity
-@NamedQueries({
-	@NamedQuery(name="findAllCookbook", query="from Cookbook c")
-})
+@NamedQueries({ @NamedQuery(name = "findAllCookbook", query = "from Cookbook c") })
 public class Cookbook extends Model implements Serializable, HasImage {
 	private static final long serialVersionUID = 1L;
 
@@ -120,7 +118,5 @@ public class Cookbook extends Model implements Serializable, HasImage {
 	public void setRecipes(List<Recipe> recipes) {
 		this.recipes = recipes;
 	}
-
-	
 
 }

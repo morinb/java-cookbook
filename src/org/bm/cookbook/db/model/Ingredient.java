@@ -107,8 +107,7 @@ public class Ingredient extends Model implements Serializable, HasImage {
 	}
 
 	public static Ingredient findByName(String name) {
-		Ingredient i = (Ingredient) getSingleResult(Ingredient.class, "findIngredientByName", getList("name"),
-				getList(name));
+		Ingredient i = getSingleResult(Ingredient.class, "findIngredientByName", getList("name"), getList(name));
 		return i;
 	}
 

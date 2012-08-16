@@ -4,7 +4,6 @@ import java.awt.Dimension;
 import java.util.Collection;
 
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JList;
@@ -18,7 +17,6 @@ import org.bm.cookbook.gui.Messages;
 import org.bm.cookbook.gui.frames.renderers.HasImageListCellRenderer;
 
 import com.jgoodies.forms.builder.PanelBuilder;
-import com.jgoodies.forms.debug.FormDebugPanel;
 import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
@@ -55,7 +53,7 @@ public class CookbookFrame extends CookbookInternalFrame {
 
 		FormLayout layout = new FormLayout("p:g, 4dlu, p:g, 4dlu, p:g", "p, 2dlu, p, 2dlu, f:p:g");
 
-		layout.setColumnGroups(new int[][] {{1,3,5}});
+		layout.setColumnGroups(new int[][] { { 1, 3, 5 } });
 		PanelBuilder pb = new PanelBuilder(layout);
 		pb.border(Borders.DIALOG);
 

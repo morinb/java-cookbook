@@ -26,9 +26,8 @@ import org.hibernate.annotations.NamedQuery;
  * 
  */
 @Entity
-@NamedQueries({
-	@NamedQuery(name="findAllRecipe", query="from Recipe r")
-	
+@NamedQueries({ @NamedQuery(name = "findAllRecipe", query = "from Recipe r")
+
 })
 public class Recipe extends Model implements Serializable, HasImage, Cloneable {
 	private static final long serialVersionUID = 1L;
@@ -164,11 +163,11 @@ public class Recipe extends Model implements Serializable, HasImage, Cloneable {
 	public String toString() {
 		return title;
 	}
-	
+
 	@Override
 	public Object clone() throws CloneNotSupportedException {
 		Object o = super.clone();
-				
+
 		return o;
 	}
 

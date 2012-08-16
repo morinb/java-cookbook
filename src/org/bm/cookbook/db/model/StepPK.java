@@ -11,30 +11,34 @@ import javax.persistence.Embeddable;
  */
 @Embeddable
 public class StepPK implements Serializable {
-	//default serial version id, required for serializable classes.
+	// default serial version id, required for serializable classes.
 	private static final long serialVersionUID = 1L;
 
-	@Column(name="RECIPE_STEP_DB_ID")
+	@Column(name = "RECIPE_STEP_DB_ID")
 	private int oid;
 
-	@Column(name="RECIPE_DB_ID")
+	@Column(name = "RECIPE_DB_ID")
 	private int recipeDbId;
 
-	public StepPK() {
-	}
+	public StepPK() {}
+
 	public int getOid() {
 		return this.oid;
 	}
+
 	public void setOid(int oid) {
 		this.oid = oid;
 	}
+
 	public int getRecipeDbId() {
 		return this.recipeDbId;
 	}
+
 	public void setRecipeDbId(int recipeDbId) {
 		this.recipeDbId = recipeDbId;
 	}
 
+	@Override
 	public boolean equals(Object other) {
 		if (this == other) {
 			return true;
@@ -42,18 +46,17 @@ public class StepPK implements Serializable {
 		if (!(other instanceof StepPK)) {
 			return false;
 		}
-		StepPK castOther = (StepPK)other;
-		return 
-			(this.oid == castOther.oid)
-			&& (this.recipeDbId == castOther.recipeDbId);
+		StepPK castOther = (StepPK) other;
+		return (this.oid == castOther.oid) && (this.recipeDbId == castOther.recipeDbId);
 	}
 
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int hash = 17;
 		hash = hash * prime + this.oid;
 		hash = hash * prime + this.recipeDbId;
-		
+
 		return hash;
 	}
 }

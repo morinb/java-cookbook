@@ -104,7 +104,7 @@ public class Unit extends Model implements Serializable {
 	}
 
 	public static Unit findByName(String name) {
-		Unit u = (Unit) getSingleResult(Unit.class,"findUnitByName", getList("name"), getList(name));
+		Unit u = getSingleResult(Unit.class, "findUnitByName", getList("name"), getList(name));
 		return u;
 	}
 

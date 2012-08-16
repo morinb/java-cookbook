@@ -16,6 +16,7 @@ import javax.swing.JList;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.filechooser.FileFilter;
@@ -200,8 +201,8 @@ public class ImageFrame extends CookbookInternalFrame {
 		pb.add(search, CC.xy(5, 5));
 
 		pb.add(imagePanel, CC.xy(1, 7));
-		JScrollPane sp = new JScrollPane(imageList, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
-				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		JScrollPane sp = new JScrollPane(imageList, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		sp.setPreferredSize(new Dimension(155, 205));
 		pb.add(sp, CC.xyw(3, 7, 3));
 
@@ -214,7 +215,7 @@ public class ImageFrame extends CookbookInternalFrame {
 
 		DefaultListModel<Image> m = new DefaultListModel<>();
 
-		Collection<Image> images = Image.findAll(Image.class);
+		Collection<Image> images = Model.findAll(Image.class);
 		for (Image image : images) {
 			m.addElement(image);
 		}

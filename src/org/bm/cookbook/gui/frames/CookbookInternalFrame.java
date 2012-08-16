@@ -5,17 +5,13 @@ import java.awt.Component;
 
 import javax.swing.JButton;
 import javax.swing.JInternalFrame;
-import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.event.InternalFrameAdapter;
 import javax.swing.event.InternalFrameEvent;
 import javax.swing.plaf.metal.MetalBorders;
 
 import org.bm.cookbook.gui.DesktopManager;
-import org.bm.cookbook.gui.Messages;
 import org.bm.cookbook.gui.utils.CircleGlassPane;
-import org.bm.cookbook.gui.utils.GuiError;
-import org.bm.cookbook.gui.utils.GuiErrorList;
 
 @SuppressWarnings("serial")
 public abstract class CookbookInternalFrame extends JInternalFrame {

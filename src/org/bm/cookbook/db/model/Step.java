@@ -101,5 +101,4 @@ public class Step extends Model implements Serializable {
 		this.recipe = recipe;
 	}
 
-
 }

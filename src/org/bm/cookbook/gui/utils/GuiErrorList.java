@@ -1,7 +1,6 @@
 package org.bm.cookbook.gui.utils;
 
 import java.awt.Component;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
@@ -11,7 +10,8 @@ import org.bm.cookbook.gui.frames.CookbookInternalFrame;
 
 @SuppressWarnings("serial")
 public class GuiErrorList extends ArrayList<GuiError> {
-	private Component c ;
+	private Component c;
+
 	public GuiErrorList(Component comp) {
 		this.c = comp;
 	}

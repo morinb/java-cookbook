@@ -91,7 +91,7 @@ public class RecipeFrame extends CookbookInternalFrame {
 				Recipe r = new Recipe();
 				r.setTitle(name.getText());
 
-				if (Image.nullImage.equals((Image) images.getSelectedItem())) {
+				if (Image.nullImage.equals(images.getSelectedItem())) {
 					r.setImage(null);
 				} else {
 					r.setImage((Image) images.getSelectedItem());
@@ -271,7 +271,7 @@ public class RecipeFrame extends CookbookInternalFrame {
 			public void valueChanged(ListSelectionEvent e) {
 				if (currentRecipeIndex != -1) {
 					Recipe currentRecipe = recipes.getModel().getElementAt(currentRecipeIndex);
-					currentRecipe = (Recipe) recipes.getSelectedValue();
+					currentRecipe = recipes.getSelectedValue();
 					if (null != currentRecipe) {
 						name.setText(currentRecipe.getTitle());
 						if (null == currentRecipe.getImage()) {

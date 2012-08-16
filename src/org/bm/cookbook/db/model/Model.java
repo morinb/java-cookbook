@@ -25,11 +25,11 @@ public abstract class Model {
 	public synchronized void beginTransaction() {
 		em.getTransaction().begin();
 	}
-	
+
 	public synchronized void commitTransaction() {
 		em.getTransaction().commit();
 	}
-	
+
 	public final synchronized void save() {
 		em.getTransaction().begin();
 		em.persist(this);
@@ -37,7 +37,7 @@ public abstract class Model {
 	}
 
 	public final synchronized void remove() {
-		if(!em.getTransaction().isActive()) {
+		if (!em.getTransaction().isActive()) {
 			em.getTransaction().begin();
 		}
 		em.remove(this);
@@ -45,7 +45,8 @@ public abstract class Model {
 	}
 
 	@SuppressWarnings("unchecked")
-	protected static <T extends Model> T getSingleResult(Class<T> clazz, String namedQuery, String[] parameterNames, Object[] parameterValue) {
+	protected static <T extends Model> T getSingleResult(Class<T> clazz, String namedQuery, String[] parameterNames,
+			Object[] parameterValue) {
 		Query query = em.createNamedQuery(namedQuery);
 		if (parameterNames.length != parameterValue.length) {
 			throw new IllegalArgumentException(Messages.getString("exception.QuerySameParameterNumber"));

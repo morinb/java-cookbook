@@ -47,7 +47,7 @@ public class ImageListCellRenderer extends DefaultListCellRenderer {
 
 			Graphics g = i.getGraphics();
 			g.drawImage(bi, 0, 0, newWidth, maxHeight, null);
-			
+
 			ImageIcon ii = new ImageIcon(i);
 			cache.put(image, ii);
 			c.setIcon(ii);

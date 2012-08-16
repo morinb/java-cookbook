@@ -1,11 +1,12 @@
 package org.bm.cookbook.db.model;
 
 import java.util.Date;
+
 import javax.annotation.Generated;
 import javax.persistence.metamodel.SingularAttribute;
 import javax.persistence.metamodel.StaticMetamodel;
 
-@Generated(value="Dali", date="2012-08-15T18:23:41.363+0200")
+@Generated(value = "Dali", date = "2012-08-15T18:23:41.363+0200")
 @StaticMetamodel(Step.class)
 public class Step_ {
 	public static volatile SingularAttribute<Step, StepPK> id;

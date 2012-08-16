@@ -77,8 +77,8 @@ public class CBUtils {
 	}
 
 	public static void handleException(String name, Throwable t) {
-		ErrorInfo ei = new ErrorInfo(Messages.getString("exception.JXError.title"), t.getMessage(), null,
-				name, t, Level.SEVERE, null);
+		ErrorInfo ei = new ErrorInfo(Messages.getString("exception.JXError.title"), t.getMessage(), null, name, t,
+				Level.SEVERE, null);
 		JXErrorPane.showDialog(null, ei);
 	}
 

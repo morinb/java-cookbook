@@ -11,6 +11,7 @@ import org.bm.cookbook.gui.utils.ExceptionHandler;
 import org.jdesktop.swingx.JXErrorPane;
 
 public class CookbookMain {
+
 	public static void main(String[] args) {
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
@@ -21,7 +22,7 @@ public class CookbookMain {
 				} catch (UnsupportedLookAndFeelException e) {
 					JXErrorPane.showDialog(e);
 				}
-				
+
 				ExceptionHandler.registerExceptionHandler();
 
 				MainFrame frame = new MainFrame();

@@ -32,7 +32,7 @@ import org.hibernate.annotations.NamedQuery;
 		@NamedQuery(name = "findAllImage", query = "from Image i"), })
 public class Image extends Model implements Serializable {
 	public static Image nullImage = new Image(Messages.getString("IngredientFrame.nullImage"));
-	
+
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -61,7 +61,7 @@ public class Image extends Model implements Serializable {
 		creationDate = new Date();
 		version = 1;
 	}
-	
+
 	private Image(String name) {
 		this();
 		this.name = name;
@@ -116,7 +116,7 @@ public class Image extends Model implements Serializable {
 	}
 
 	public static Image findByName(String name) {
-		Image i = (Image) getSingleResult(Image.class, "findImageByName", getList("name"), getList(name));
+		Image i = getSingleResult(Image.class, "findImageByName", getList("name"), getList(name));
 		return i;
 	}
 

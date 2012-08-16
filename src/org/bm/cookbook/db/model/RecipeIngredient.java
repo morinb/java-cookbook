@@ -21,10 +21,8 @@ import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
 
 @Entity
-@NamedQueries({
-	@NamedQuery(name="findAllRecipeIngredient", query="from RecipeIngredient r"),
-	@NamedQuery(name="findRecipeIngredientByRecipe", query="from RecipeIngredient ri where ri.recipe.oid=:oid")
-})
+@NamedQueries({ @NamedQuery(name = "findAllRecipeIngredient", query = "from RecipeIngredient r"),
+		@NamedQuery(name = "findRecipeIngredientByRecipe", query = "from RecipeIngredient ri where ri.recipe.oid=:oid") })
 public class RecipeIngredient extends Model {
 
 	@Id
@@ -129,18 +127,18 @@ public class RecipeIngredient extends Model {
 	public void setQuantity(int quantity) {
 		this.quantity = quantity;
 	}
-	
+
 	@Override
 	public String toString() {
-		return quantity+" "+unit.toString()+Messages.getString("RecipeIngredient.of")+ingredient.toString(); //$NON-NLS-1$ //$NON-NLS-2$
+		return quantity + " " + unit.toString() + Messages.getString("RecipeIngredient.of") + ingredient.toString(); //$NON-NLS-1$ //$NON-NLS-2$
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public static Collection<RecipeIngredient> findRecipeIngredientByRecipe(int recipeOID) {
 		Query query = em.createNamedQuery("findRecipeIngredientByRecipe");
 		query.setParameter("oid", recipeOID);
 		return query.getResultList();
-		
+
 	}
 
 }

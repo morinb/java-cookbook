@@ -17,9 +17,9 @@ public class ExceptionHandler implements Thread.UncaughtExceptionHandler {
 			// looping!
 		}
 	}
-	
+
 	public static void registerExceptionHandler() {
-	    Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler());
-	    System.setProperty("sun.awt.exception.handler", ExceptionHandler.class.getName());
-	  }
+		Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler());
+		System.setProperty("sun.awt.exception.handler", ExceptionHandler.class.getName());
+	}
 }

@@ -10,8 +10,7 @@ public class HSQLDBShutdownHook implements Runnable {
 	@Override
 	public void run() {
 		try {
-			DriverManager.getConnection(
-			          "jdbc:hsqldb:file:CookbookDB;shutdown=true", "SA", "");
+			DriverManager.getConnection("jdbc:hsqldb:file:CookbookDB;shutdown=true", "SA", "");
 		} catch (SQLException e) {
 			JXErrorPane.showDialog(e);
 		}

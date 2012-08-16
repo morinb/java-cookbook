@@ -46,20 +46,18 @@ public class UnitFrame extends CookbookInternalFrame {
 		this.setTitle(Messages.getString("CookbookFrame.itemUnit")); //$NON-NLS-1$
 
 		{
-			
+
 			add = new JButton(Messages.getString("UnitFrame.buttonAdd")); //$NON-NLS-1$
 			add.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					GuiErrorList l = new GuiErrorList(UnitFrame.this);
 
-					
-					
 					if (name.getText().isEmpty()) {
 						l.add(new GuiError(name, Messages.getString("errors.nameNotEmpty")));
 					} else {
 						Unit u = Unit.findByName(name.getText());
-						if(null != u) {
+						if (null != u) {
 							l.add(new GuiError(null, Messages.getString("errors.unitAlreadyExists")));
 						}
 					}
@@ -68,9 +66,9 @@ public class UnitFrame extends CookbookInternalFrame {
 						l.add(new GuiError(abbreviation, Messages.getString("errors.abbreviationNotEmpty")));
 					}
 
-					if(l.showErrors()) {
+					if (l.showErrors()) {
 						return;
-					} 
+					}
 
 					Unit u = new Unit();
 					u.setName(name.getText());
@@ -80,7 +78,6 @@ public class UnitFrame extends CookbookInternalFrame {
 					reload();
 				}
 
-				
 			});
 			delete = new JButton(Messages.getString("UnitFrame.buttonDelete")); //$NON-NLS-1$
 			delete.addActionListener(new ActionListener() {

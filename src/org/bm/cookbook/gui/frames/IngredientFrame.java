@@ -190,7 +190,7 @@ public class IngredientFrame extends CookbookInternalFrame {
 		}
 
 		ingredientsList.setModel(m);
-		
+
 	}
 
 	@Override

@@ -217,7 +217,7 @@ public class MainFrame extends JFrame {
 	}
 
 	private void createLaFMenus(JMenu menuLaf, LookAndFeelInfo[] installedLookAndFeels) {
-		
+
 		for (final LookAndFeelInfo lookAndFeelInfo : installedLookAndFeels) {
 			JMenuItem laf = new JMenuItem(lookAndFeelInfo.getName());
 			laf.addActionListener(new ActionListener() {
